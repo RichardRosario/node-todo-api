@@ -22,7 +22,9 @@ var Todo = mongoose.model('Todo', {
 // }); 
 
 // var newTodo = new Todo({
-//     text: ' upload files '
+//     text: ' upload files ',
+//     completed: true,
+//     completedAt: 123
 // });
 
 // newTodo.save().then((doc) => {
