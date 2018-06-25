@@ -12,7 +12,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, client) => {
     const db = client.db('TodoApp');
 
     db.collection('Todos').insertOne({
-        text: 'Another thing to do',
+        text: 'Some todo text',
         completed: true
     }, (err, result) => {
         if (err) {
@@ -24,9 +24,9 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, client) => {
 
     db.collection('Users').insertOne(
         {
-        name: 'Marivic',
+        name: 'Richard',
         age: 49,
-        location: 'Philipines'
+        location: 'Bahamas'
     }, (err, result) => {
         if (err) {
             return console.log('Unable to connect to mongo server', err);

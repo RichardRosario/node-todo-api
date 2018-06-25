@@ -11,12 +11,16 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, client) => {
     // db.collection('Todos').deleteMany({text: 'Eat snack'}).then((result) => {
     //     console.log(result);
     // });
-  //findOneAndDelete
-    db.collection('Todos').findOneAndDelete({
-        completed: true
+    db.collection('Users').findOneAndUpdate({_id: new ObjectID('5b2f9022f466b32728e834bb')}, 
+    {$inc: {
+        age: -4,
+    }}, 
+    {
+        returnOriginal: false
     }).then((result) => {
         console.log(result);
     });
-  //deleteOne
+   
+  
     // client.close();
 });
