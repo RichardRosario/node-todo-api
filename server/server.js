@@ -7,6 +7,7 @@ var { Todo } = require('../models/todo');
 var {User} = require('../models/user');
 
 var app = express();
+const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 
@@ -22,6 +23,15 @@ app.post('/todos', (req, res) => {
    })
 });
 
+app.get('/', (req, res) => {
+    Todo.find().then((todos) => {
+        res.send({todos: todos.text})
+    }, (err) => {
+        res.status(400).send(err);
+    })
+})
+
+//Get todos
 app.get('/todos', (req, res) => {
     Todo.find().then((todos) => {
         res.send({todos})
@@ -30,7 +40,7 @@ app.get('/todos', (req, res) => {
     })
 });
 
-//Get /todos
+//Get /todo
 app.get('/todos/:id', (req, res) => {
     var id = req.params.id;
 
@@ -49,8 +59,8 @@ app.get('/todos/:id', (req, res) => {
     })
 });
 
-app.listen(5000, () => {
-    console.log('Started on port 5000');
+app.listen(port, () => {
+    console.log(`Started at port ${port}`);
 });
 
 module.exports = {app} 

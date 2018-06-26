@@ -21,13 +21,13 @@ var Todo = mongoose.model('Todo', {
 //     text: 'Eat Dinner'
 // }); 
 
-// var newTodo = new Todo({
+// var anotherTodo = new Todo({
 //     text: ' upload files ',
 //     completed: true,
 //     completedAt: 123
 // });
 
-// newTodo.save().then((doc) => {
+// anotherTodo.save().then((doc) => {
 //  console.log(JSON.stringify(doc, undefined, 2));
 // }, (err) => {
 //     console.log('Unable to save todo', err);
