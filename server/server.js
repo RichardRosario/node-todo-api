@@ -6,11 +6,12 @@ const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
 
 var { mongoose } = require('./db/mongoose');
-var { Todo } = require('../models/todo');
-var {User} = require('../models/user');
+var { Todo } = require('./models/todo');
+var {User} = require('./models/user');
+var {authenticate} = require('./middleware/authenticate');
 
 var app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
@@ -37,8 +38,8 @@ app.post('/todos', (req, res) => {
 app.get('/todos/:id', (req, res) => {
     var id = req.params.id;
 
-    if (!ObjectID.isValid) {
-        return res.status(400).send();
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
     }
 
     Todo.findById(id).then((todo) => {
@@ -62,11 +63,11 @@ app.delete('/todos/:id', (req, res) => {
 
     Todo.findByIdAndRemove(id).then((todo) => {
         if (!todo) {
-            return res.status(400).then();
+            return res.status(404).send();
         }
-        res.send(todo);
+        res.send({todo});
     }).catch((err) => {
-        res.status(404).send();
+        res.status(400).send();
     })
 });
 
@@ -84,10 +85,10 @@ body.completedAt = new Date().getTime();
             body.completed = false;
             body.completedAt = null;
         }
-    Todo.findByIdAndUpdate(id, {$set: body}, {new: true})
-        .then((todo) => {
+  Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
+
             if (!todo) {
-                return res.status(404).send()
+                return res.status(404).send();
             }
             res.send({todo});
     }).catch((err) => {
@@ -102,11 +103,24 @@ app.post('/users', (req, res) => {
     user.save().then(() => {
         return user.generateAuthToken();
     }).then((token) => {
-        res.header(x-auth, token).send(user);
+        res.header('x-auth', token).send(user);
     }).catch((err) => {
         res.status(400).send(err);
-    });
-})
+    })
+});
+
+app.get('/users', (req, res) => {
+    User.find().then((users) => {
+        res.send({users})
+    }, (err) => {
+        res.status(400).send(err);
+    })
+});
+
+
+app.get('/users/me', authenticate, (req, res) => {
+    res.send(req.user);
+});
 
 app.listen(port, () => {
     console.log(`Started at port ${port}`);
